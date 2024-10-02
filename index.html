@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ストップウォッチ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        #counter {
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        button {
+            padding: 10px 5px;
+            font-size: 16px;
+            margin-top: 20px;
+            width: 150px;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>ストップウォッチ</h1>
+
+    <p id="counter">0:0:0:0</p>
+
+    <button id="startBtn">スタート</button>
+    <button id="stopBtn" disabled>ストップ</button>
+    <button id="resetBtn" disabled>リセット</button>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var mili_seconds = 0;
+            var seconds = 0;
+            var minutes = 0;
+            var hour = 0;
+
+
+            function startCounting() {
+                intervalId = setInterval(function() {
+                    mili_seconds++;
+                    if (mili_seconds === 10) {
+                        mili_seconds = 0
+                        seconds++;
+                    }
+                    if (seconds === 60) {
+                        seconds = 0
+                        minutes++;
+                    }
+                    if (minutes === 60) {
+                        minutes = 0
+                        hour++;
+                    }
+                    $('#counter').text(hour + ':' + minutes + ':' + seconds + ':' + mili_seconds);
+                }, 100);
+            }
+
+            $('#startBtn').on('click', function() {
+                startCounting();
+                $('#startBtn').prop('disabled', true);
+                $('#stopBtn').prop('disabled', false); // 停止ボタンを有効化
+                $('#resetBtn').prop('disabled', false); // リセットボタンを有効化
+            });
+
+            // 停止ボタンのクリックイベント
+            $('#stopBtn').on('click', function() {
+                clearInterval(intervalId); // カウント停止
+                $('#startBtn').prop('disabled', false); // 開始ボタンを有効化
+                $('#stopBtn').prop('disabled', true); // 停止ボタンを無効化
+            });
+
+            $('#resetBtn').on('click', function() {
+                clearInterval(intervalId); // カウント停止
+                mili_seconds = 0;
+                seconds = 0;
+                minutes = 0;
+                hour = 0;
+                $('#counter').text('0:0:0:0');
+                $('#startBtn').prop('disabled', false); // 開始ボタンを有効化
+                $('#stopBtn').prop('disabled', true); // 停止ボタンを無効化
+                $('#resetBtn').prop('disabled', true); // リセットボタンを無効化
+            });
+        });
+    </script>
+</body>
