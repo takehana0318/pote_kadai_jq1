@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator with Condition</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            }
+
+        body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #333;
+        font-family: Arial, sans-serif;
+        }
+
+        .calculator {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 10px;
+        padding: 20px;
+        background-color: #444;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .display {
+            grid-column: span 4;
+            background-color: #222;
+            padding: 20px;
+            font-size: 2rem;
+            color: white;
+            text-align: right;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            height: 77px;
+        }
+
+        .display input {
+            width: 100%;
+            font-size: 2rem;
+            background-color: #222;
+            color: white;
+            border: none;
+            text-align: right;
+            outline: none;
+        }
+
+        button {
+            padding: 20px;
+            font-size: 1.5rem;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            background-color: #eee;
+            color: #333;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            background-color: #ddd;
+        }
+
+        button#plusButton,
+        button#minusButton,
+        button#multiButton,
+        button#divButton {
+            background-color: #f79b42;
+            color: white;
+        }
+
+        button#plusButton:active,
+        button#minusButton:active,
+        button#multiButton:active,
+        button#divButton:active {
+            background-color: #f57c00;
+        }
+
+        button#clearButton,
+        button#calcButton {
+            grid-column: span 2;
+            background-color: #ccc;
+            color: black;
+        }
+
+        button#clearButton:active,
+        button#calcButton:active {
+            background-color: #bbb;
+        }
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display">
+            <p> <span id="display">0</span></p> <!-- 表示部分 -->
+        </div>
+        <button class="numberButton">7</button>
+        <button class="numberButton">8</button>
+        <button class="numberButton">9</button>
+        <button id="plusButton">+</button>
+        <button class="numberButton">4</button>
+        <button class="numberButton">5</button>
+        <button class="numberButton">6</button>
+        <button id="minusButton">-</button>
+        <button class="numberButton">1</button>
+        <button class="numberButton">2</button>
+        <button class="numberButton">3</button>
+        <button id="multiButton">*</button>
+        <button class="numberButton">0</button>
+        <button class="numberButton">00</button>
+        <button id="decimalPoint">.</button>
+        <button id="divButton">/</button>
+        <button id="clearButton">AC</button>
+        <button id="calcButton">=</button>
+
+    </div>   
+
+    <script>
+        $(document).ready(function() {
+            var displayValue = '';
+            var decimalFlag = "none";
+            total = 0;
+            pre_value = null;
+            now_value = "0";
+            calcFlag = "none"
+
+            $('.numberButton').click(function() {
+                var number = $(this).text();
+                console.log("now_value:", now_value); 
+                if (now_value == null || now_value == '0') {
+                    now_value = number;
+                } else {
+                    now_value += number;
+                }
+                displayValue += number
+                $('#display').text(displayValue);
+            });
+
+            $('#decimalPoint').click(function() {
+                if (decimalFlag == "none") {
+                    if (now_value != null) {
+                        now_value += '.';
+                        displayValue += '.';
+                        $('#display').text(displayValue);
+                        decimalFlag = "flg";
+                        console.log(now_value);
+                    }
+                }
+            });
+
+            $('#plusButton').click(function() {
+                if (calcFlag == "none") {
+                    calcFlag = "plus";
+                    pre_value = now_value;
+                    now_value = null;
+                    displayValue = pre_value + ' + '
+                    decimalFlag = "none";
+                    $('#display').text(displayValue);
+                }
+            });
+
+            $('#minusButton').click(function() {
+                if (calcFlag == "none") {
+                    calcFlag = "minus";
+                    pre_value = now_value;
+                    now_value = null;
+                    displayValue = pre_value + ' - '
+                    decimalFlag = "none";
+                    $('#display').text(displayValue);
+                }
+            });
+
+            $('#multiButton').click(function() {
+                if (calcFlag == "none") {
+                    calcFlag = "multi";
+                    pre_value = now_value;
+                    now_value = null;
+                    displayValue = pre_value + ' * '
+                    decimalFlag = "none";
+                    $('#display').text(displayValue);
+                }
+            });
+
+            $('#divButton').click(function() {
+                if (calcFlag == "none") {
+                    calcFlag = "div";
+                    pre_value = now_value;
+                    now_value = null;
+                    displayValue = pre_value + ' / '
+                    decimalFlag = "none";
+                    $('#display').text(displayValue);
+                }
+            });
+
+            $('#clearButton').click(function() {
+                displayValue = '';
+                decimalFlag = "none";
+                total = 0;
+                pre_value = null;
+                now_value = "0";
+                calcFlag = "none"
+                $('#display').text(displayValue);
+            })
+
+            $('#calcButton').click(function() {
+                if (calcFlag != "none") {
+                    if (pre_value != null && now_value != null) {
+                        if (calcFlag == "plus") {
+                            displayValue = parseFloat(pre_value) + parseFloat(now_value);
+                            now_value = displayValue;
+                            pre_value = null;
+                            calcFlag = "none"
+                            $('#display').text(displayValue);
+                        } else if (calcFlag == "minus") {
+                            displayValue = parseFloat(pre_value) - parseFloat(now_value);
+                            now_value = displayValue;
+                            pre_value = null;
+                            calcFlag = "none"
+                            $('#display').text(displayValue);
+                        } else if (calcFlag == "multi") {
+                            displayValue = parseFloat(pre_value) * parseFloat(now_value);
+                            now_value = displayValue;
+                            pre_value = null;
+                            calcFlag = "none"
+                            $('#display').text(displayValue);
+                        } else if (calcFlag == "div") {
+                            var temp = parseFloat(pre_value) / parseFloat(now_value);
+                            displayValue = parseFloat(temp.toFixed(10));
+                            now_value = displayValue;
+                            pre_value = null;
+                            calcFlag = "none"
+                            $('#display').text(displayValue);
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
